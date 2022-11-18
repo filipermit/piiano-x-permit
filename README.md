@@ -1,5 +1,7 @@
 <h2>Launch the Application 🚀</h2>
 
+<img width="1624" alt="Screenshot 2022-11-18 at 17 28 48" src="https://user-images.githubusercontent.com/109458126/202753867-04fd9103-0962-49ee-928b-1aae2a9ffa0a.png">
+
 Please follow the below steps to run this demo.
 
 ---
