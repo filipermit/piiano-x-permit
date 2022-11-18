@@ -1,9 +1,5 @@
 import React, { useState } from "react";
-import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import ThirdPartyEmailPassword, {
-	ThirdPartyEmailPasswordAuth,
-} from "supertokens-auth-react/recipe/thirdpartyemailpassword";
 import {
 	Avatar,
 	Text,
@@ -23,28 +19,57 @@ import { IconCheck, IconX, IconHeart, IconCopy } from "@tabler/icons";
 
 export default function Demo(props) {
 	return (
-		<ThirdPartyEmailPasswordAuth>
-			<ProtectedDemoPage
+		<div className={styles.demoContainer}>
+			<DemoPage
+				avatar={"ariel.jpg"}
+				name={"Ariel Shiftan"}
+				email={"ariel@piiano.com"}
+				job={"Co-Founder & CTO"}
+				image={"ariel.jpg"}
+				title={"Ariel Shiftan 👋"}
+				description={"Co-Founder and CTO @ Piiano.com"}
+				country={"Israel"}
+				badges={[{ label: "Videography", emoji: "📹" }]}
+			/>
+
+			<DemoPage
 				avatar={"filip.jpg"}
 				name={"Filip Grebowski"}
 				email={"filip@permit.io"}
 				job={"Developer Advocate"}
+				image={"filip.jpg"}
+				title={"Filip Grebowski 👋"}
+				description={
+					"YouTube Creator, Engineer & Developer Advocate @ Permit.io"
+				}
+				country={"England"}
+				badges={[
+					{ label: "Videography", emoji: "📹" },
+					{ label: "Coding", emoji: "🤓" },
+					{ label: "Photography", emoji: "📸" },
+					{ label: "Fishing", emoji: "🎣" },
+					{ label: "Snowboarding", emoji: "🏂" },
+				]}
 			/>
-		</ThirdPartyEmailPasswordAuth>
+		</div>
 	);
 }
 
 // Protected page that can only be accessed after successful authentication.
-function ProtectedDemoPage({ avatar, name, email, job }) {
+function DemoPage({
+	avatar,
+	name,
+	email,
+	job,
+	image,
+	title,
+	description,
+	country,
+	badges,
+}) {
 	const [showMore, setShowMore] = useState(false);
 	const [personalInfo, setPersonalInfo] = useState(false);
 	const [error, setError] = useState(false);
-
-	// Logging user out.
-	const logoutClicked = async () => {
-		await ThirdPartyEmailPassword.signOut();
-		ThirdPartyEmailPassword.redirectToAuth();
-	};
 
 	// Permit generic permission call to the backend.
 	const checkPermissions = async (action, resource) => {
@@ -72,7 +97,7 @@ function ProtectedDemoPage({ avatar, name, email, job }) {
 			setShowMore(true);
 
 			// Checking if user can copy their GPG key.
-			const result = await checkPermissions("view-gpg-key", "card");
+			const result = await checkPermissions("view-ssn-number", "card");
 
 			if (result.status !== 403) {
 				setPersonalInfo(true);
@@ -85,75 +110,49 @@ function ProtectedDemoPage({ avatar, name, email, job }) {
 	};
 
 	return (
-		<div className={styles.container}>
-			<Head>
-				<title>SuperTokens x Permit</title>
-				<meta
-					name="description"
-					content="Demo application for SuperTokens x Permit"
-				/>
-				<link rel="icon" href="/favicon.ico" />
-			</Head>
-			<main className={styles.main}>
-				{error ? (
-					<Notification
-						icon={<IconX size={18} />}
-						color="red"
-						style={{ marginBottom: "20px" }}
-						onClose={() => setError(false)}
-					>
-						403: You are Unauthorized to do this!
-					</Notification>
-				) : null}
-				{showMore ? (
-					<LearnMoreBadgeCard
-						image={"filip.jpg"}
-						title={"Filip Grebowski 👋"}
-						description={
-							"YouTube Creator, Engineer & Developer Advocate @ Permit.io"
-						}
-						country={"United Kingdom"}
-						badges={[
-							{ label: "Videography", emoji: "📹" },
-							{ label: "Coding", emoji: "🤓" },
-							{ label: "Photography", emoji: "📸" },
-							{ label: "Fishing", emoji: "🎣" },
-							{ label: "Snowboarding", emoji: "🏂" },
-						]}
-						visibility={() => setShowMore(false)}
-						personalInfo={personalInfo}
-					/>
-				) : (
-					<Paper
-						radius="md"
-						withBorder
-						p="lg"
-						sx={(theme) => ({
-							backgroundColor: theme.white,
-						})}
-					>
-						<Avatar src={avatar} size={120} radius={120} mx="auto" />
-						<Text align="center" size="lg" weight={500} mt="md">
-							{name}
-						</Text>
-						<Text align="center" color="dimmed" size="sm">
-							{email} • {job}
-						</Text>
-
-						<Button variant="default" fullWidth mt="md" onClick={learnMore}>
-							Learn more
-						</Button>
-					</Paper>
-				)}
-
-				<Button
+		<div className={styles.main}>
+			{error ? (
+				<Notification
+					icon={<IconX size={18} />}
 					color="red"
-					onClick={logoutClicked}
-					style={{ width: "280px", marginTop: "20px" }}
+					style={{ marginBottom: "20px" }}
+					onClose={() => setError(false)}
 				>
-					Logout
-				</Button>
-			</main>
+					403: You are Unauthorized to do this!
+				</Notification>
+			) : null}
+			{showMore ? (
+				<LearnMoreBadgeCard
+					image={image}
+					title={title}
+					description={description}
+					country={country}
+					badges={badges}
+					visibility={() => setShowMore(false)}
+					personalInfo={personalInfo}
+				/>
+			) : (
+				<Paper
+					radius="md"
+					withBorder
+					p="lg"
+					sx={(theme) => ({
+						backgroundColor: theme.white,
+					})}
+				>
+					<Avatar src={avatar} size={120} radius={120} mx="auto" />
+					<Text align="center" size="lg" weight={500} mt="md">
+						{name}
+					</Text>
+					<Text align="center" color="dimmed" size="sm">
+						{email} • {job}
+					</Text>
+
+					<Button variant="default" fullWidth mt="md" onClick={learnMore}>
+						Learn more
+					</Button>
+				</Paper>
+			)}
 		</div>
 	);
 }
@@ -257,25 +256,25 @@ function LearnMoreBadgeCard({
 }
 
 // Fetches the GPG key stored in the backend.
-const fetchGPG = async () => {
-	let GPGKey;
+const fetchSSNNumber = async () => {
+	let SSNNumber;
 
-	const res = await fetch("/api/auth/getGPG");
+	const res = await fetch("/api/auth/getSSN");
 	if (res.status === 200) {
 		const json = await res.json();
-		GPGKey = json.gpg;
+		SSNNumber = json.ssn;
 	}
 
-	alert(GPGKey);
+	alert(SSNNumber);
 
-	return GPGKey;
+	return SSNNumber;
 };
 
 function ButtonCopy() {
 	const clipboard = useClipboard();
 	return (
 		<Tooltip
-			label="Key copied successfully."
+			label="SSN copied successfully."
 			offset={5}
 			position="bottom"
 			radius="sm"
@@ -303,9 +302,9 @@ function ButtonCopy() {
 					},
 					rightIcon: { marginLeft: 22 },
 				}}
-				onClick={() => clipboard.copy(fetchGPG())}
+				onClick={() => clipboard.copy(fetchSSNNumber())}
 			>
-				Copy GPG Key
+				Copy SSN Number
 			</Button>
 		</Tooltip>
 	);

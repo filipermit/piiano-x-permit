@@ -1,17 +1,7 @@
 import { Permit } from "permitio";
-import { superTokensNextWrapper } from "supertokens-node/nextjs";
-import { verifySession } from "supertokens-node/recipe/session/framework/express";
 
 // Verify that a user is authenticated by checking the session.
 async function permissionCheck(req, res) {
-	await superTokensNextWrapper(
-		async (next) => {
-			await verifySession()(req, res, next);
-		},
-		req,
-		res
-	);
-
 	const { action, resource } = req.body;
 
 	// Permit PDP instance.
@@ -21,13 +11,11 @@ async function permissionCheck(req, res) {
 		token: process.env.PERMIT_IO_KEY,
 	});
 
-	// Permit check for correct permissions for a sepcific role.
-	const permitted = await permit.check(req.session.getUserId(), action, {
-		type: resource,
-		tenant: "SuperTokens",
-	});
+	// Permit check for correct permissions for a specific role.
 
-	const userId = req.session.getUserId();
+	const userId = "filip@permit.io";
+
+	const permitted = await permit.check(userId, action, resource);
 
 	if (permitted) {
 		console.log(`${userId} is PERMITTED to ${action} on ${resource}.`);
