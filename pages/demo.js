@@ -55,7 +55,7 @@ export default function Demo(props) {
 	);
 }
 
-// Protected page that can only be accessed after successful authentication.
+// The main demo page
 function DemoPage({
 	avatar,
 	name,
@@ -71,7 +71,7 @@ function DemoPage({
 	const [personalInfo, setPersonalInfo] = useState(false);
 	const [error, setError] = useState(false);
 
-	// Permit generic permission call to the backend.
+	// Permit's generic permission call to the backend.
 	const checkPermissions = async (action, resource) => {
 		const permissionData = {
 			action: action,
@@ -90,13 +90,13 @@ function DemoPage({
 	};
 
 	const learnMore = async () => {
-		// Checking if user can view personal info on the card resource.
+		// Checking if the current user can view personal info on the card resource.
 		const result = await checkPermissions("view-personal-info", "card");
 
 		if (result.status !== 403) {
 			setShowMore(true);
 
-			// Checking if user can copy their GPG key.
+			// Checking if user can copy their Social Security Number.
 			const result = await checkPermissions("view-ssn-number", "card");
 
 			if (result.status !== 403) {

@@ -1,7 +1,7 @@
 import { Permit } from "permitio";
 
 async function verifyAndFetchSSNNumber(req, res) {
-	const GPGKey = "XXXX-XXX-7727";
+	const SSNNumber = "XXXX-XXX-7727";
 
 	// Permit PDP instance.
 	const permit = new Permit({
