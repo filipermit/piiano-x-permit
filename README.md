@@ -4,23 +4,34 @@
 
 Please follow the below steps to run this demo.
 
---- 
+---
 
 <h3>1. Complete the onboarding with Permit.io</h3>
 
-Navigate to the documentation for the step-by-step [instructions](https://docs.permit.io/).
+Navigate to the [Permit App](https://docs.permit.io/) and create an account. Run through the onboarding to learn how to work with Permit.
 
-<h3>2. Start the app</h3>
+Make sure you create a policy like shown in the example below. Your policy needs an `admin` role, with a `card` resource.
+The resource should have the actions: `view-personal-info` & `view-ssn-number`.
 
-```npm install``` followed by ```npm run dev```
-<br /><br />
-Once the app starts, navigate to ```localhost:3000```
+If you are struggling with this step, follow the [quickstart instructions](https://docs.permit.io/quickstart).
 
-<h3>3. Run the Policy Decision Point (PDP)</h3>
+<h3>2. Run the Policy Decision Point (PDP)</h3>
 
-```docker run -p 7766:7000 --env PDP_API_KEY=<YOUR_PERMIT_API_KEY> permitio/pdp```
+Download the docker image for the PDP:
+
+`docker pull permitio/pdp-v2:latest`
+
+Now run the PDP with the command below in your terminal:
+
+`docker run -p 7766:7000 --env PDP_API_KEY=<YOUR_PERMIT_API_KEY> permitio/pdp`
 <br /><br />
 Make sure to replace the API KEY with your own.
+
+<h3>3. Start the app</h3>
+
+`npm install` followed by `npm run dev`
+<br /><br />
+Once the app starts, navigate to `localhost:3000`
 
 <h3>4. Enjoy the demo!</h3>
 
@@ -28,21 +39,8 @@ Make sure to replace the API KEY with your own.
 
 ---
 
-<h1>Screenshots 📸</h1>
-
-<h3>SuperToken Sign In / Sign Up Screen</h3>
-<img width="1624" alt="Screenshot 2022-08-23 at 00 25 24" src="https://user-images.githubusercontent.com/109458126/186037206-e472ed02-0c4b-4b4e-97e8-02845308a332.png">
-
-<h3>Permit.io Policy Editor</h3>
-<img width="1624" alt="Screenshot 2022-08-23 at 00 32 04" src="https://user-images.githubusercontent.com/109458126/186037523-12e23b42-e076-4694-95a6-91e7e5857b87.png">
-
-<h3>User viewing their own account (as Admin)</h3>
-<img width="1624" alt="Screenshot 2022-08-23 at 00 28 20" src="https://user-images.githubusercontent.com/109458126/186037230-4496435d-432c-4a80-be3d-4722e33bce5b.png">
-
---- 
-
-<h3>Still here? Star Permit and SuperTokens on Github!</h3>
+<h3>Still here? Star Permit on Github or visit Piiano!</h3>
 
 ⭐ [Permit.io](https://github.com/permitio/opal) ⭐
 <br />
-⭐ [SuperTokens](https://github.com/supertokens/supertokens-core) ⭐
+[Piiano.com](https://piiano.com)
