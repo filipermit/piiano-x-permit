@@ -14,6 +14,9 @@ Make sure you create a policy like shown in the example below. Your policy needs
 <br /><br />
 The resource should have the actions: `view-personal-info` & `view-ssn-number`.
 
+<img width="1624" alt="Screenshot 2022-11-18 at 17 33 54" src="https://user-images.githubusercontent.com/109458126/202754960-45accfd1-3e9d-4c01-aa16-8e20f7d84af6.png">
+<img width="1624" alt="Screenshot 2022-11-18 at 17 34 07" src="https://user-images.githubusercontent.com/109458126/202754971-5f7bcebe-50d0-431b-903e-066a287200a1.png">
+
 If you are struggling with this step, follow the [Quickstart instructions](https://docs.permit.io/quickstart).
 
 <h3>2. Run the Policy Decision Point (PDP)</h3>
