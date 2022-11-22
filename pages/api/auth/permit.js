@@ -11,6 +11,8 @@ async function permissionCheck(req, res) {
 		token: process.env.PERMIT_IO_KEY,
 	});
 
+	console.log(process.env.PERMIT_IO_KEY);
+
 	// Permit check for correct permissions for a specific role.
 
 	const userId = "filip@permit.io";

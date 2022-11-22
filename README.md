@@ -35,6 +35,20 @@ Now run the PDP with the command below in your terminal. Make sure to replace th
 <br /><br />
 Once the app starts, navigate to `localhost:3000`
 
+<h3>Launch the database</h3>
+
+The database is run with Prisma, which is a Object-Relational Mapper for Node.js.
+It provides an abstraction for interacting with a database directly. Prisma generates type-safe database schemas that map to your database and generates the actual database queries.
+
+If any changes are made to the `schema.prisma` file, you need to re-map the data model to the database schema. If that is the case,
+run the command below:
+
+`npx prisma migrate dev --name init`
+
+Now, just run the docker image to launch your database on port `:5555`.
+
+`docker compose up`
+
 <h3>4. Enjoy the demo!</h3>
 
 ![Alt Text](https://media.giphy.com/media/CnhXn5Z9OUCYTzBAVr/giphy.gif)

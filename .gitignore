@@ -39,3 +39,4 @@ jspm_packages
 .next/cache
 
 .env
+.env.local
