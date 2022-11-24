@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styles from "../styles/Home.module.css";
+import React, { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 import {
 	Avatar,
 	Text,
@@ -13,97 +13,89 @@ import {
 	ActionIcon,
 	createStyles,
 	Tooltip,
+	NativeSelect,
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { IconCheck, IconX, IconHeart, IconCopy } from "@tabler/icons";
+import { useCookies } from "react-cookie"
+
+import styles from "../styles/Home.module.css";
+import db from "../utils/DB";
+import { access } from "../utils/access";
+
+export async function getServerSideProps(context) {
+	var info = {}
+	var user = access.getUser(context.req);
+	if (user) {
+		info = db.getInfo(null, ["name", "email", "job", "avatar"])
+	}
+	return {
+		props: { info }, // will be passed to the page component as props
+	}
+}
 
 export default function Demo(props) {
+	const [login, setLogin] = useState('');
+	const [cookie, setCookie] = useCookies(["user"])
+	const router = useRouter();
+
+	// Initialize user to nul on load
+	useEffect(() => {
+		setCookie("user", "");
+		setLogin("")
+		router.replace(router.asPath);
+	}, [])
+
+	var uids = Object.keys(props.info);
+	const pages = uids.map(uid => {
+		var info = props.info[uid];
+		info.uid = uid;
+		return <DemoPage key={uid} active_uid={login} {...info} />
+	})
 	return (
 		<div className={styles.demoContainer}>
-			<DemoPage
-				avatar={"ariel.jpg"}
-				name={"Ariel Shiftan"}
-				email={"ariel@piiano.com"}
-				job={"Co-Founder & CTO"}
-				image={"ariel.jpg"}
-				title={"Ariel Shiftan 👋"}
-				description={"Co-Founder and CTO @ Piiano.com"}
-				country={"Israel"}
-				badges={[{ label: "Videography", emoji: "📹" }]}
-			/>
-
-			<DemoPage
-				avatar={"filip.jpg"}
-				name={"Filip Grebowski"}
-				email={"filip@permit.io"}
-				job={"Developer Advocate"}
-				image={"filip.jpg"}
-				title={"Filip Grebowski 👋"}
-				description={
-					"YouTube Creator, Engineer & Developer Advocate @ Permit.io"
+			<NativeSelect
+				data={[{ value: '', label: '' }, { value: 'filip@permit.io', label: 'Filip' }, { value: 'ariel@piiano.com', label: 'Ariel' }]}
+				label="Choose an account"
+				description="Login as"
+				value={login}
+				onChange={
+					(event) => {
+						setCookie("user", "JWT:" + event.target.value);
+						setLogin(event.target.value);
+						router.replace(router.asPath);
+					}
 				}
-				country={"England"}
-				badges={[
-					{ label: "Videography", emoji: "📹" },
-					{ label: "Coding", emoji: "🤓" },
-					{ label: "Photography", emoji: "📸" },
-					{ label: "Fishing", emoji: "🎣" },
-					{ label: "Snowboarding", emoji: "🏂" },
-				]}
 			/>
+			{pages}
 		</div>
 	);
 }
 
 // The main demo page
 function DemoPage({
+	uid,
 	avatar,
 	name,
 	email,
 	job,
-	image,
-	title,
-	description,
-	country,
-	badges,
+	active_uid,
 }) {
-	const [showMore, setShowMore] = useState(false);
-	const [personalInfo, setPersonalInfo] = useState(false);
 	const [error, setError] = useState(false);
+	const [details, setDetails] = useState(null);
+	const [prevActiveUid, setPrevActiveUid] = useState(active_uid);
 
-	// Permit's generic permission call to the backend.
-	const checkPermissions = async (action, resource) => {
-		const permissionData = {
-			action: action,
-			resource: resource,
-		};
-
-		const hasPermission = await fetch("/api/auth/permit", {
-			method: "POST",
-			body: JSON.stringify(permissionData),
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-
-		return hasPermission;
-	};
+	if (prevActiveUid != active_uid) {
+		setPrevActiveUid(active_uid);
+		setDetails(null);
+	}
 
 	const learnMore = async () => {
 		// Checking if the current user can view personal info on the card resource.
-		const result = await checkPermissions("view-personal-info", "card");
-
-		if (result.status !== 403) {
-			setShowMore(true);
-
-			// Checking if user can copy their Social Security Number.
-			const result = await checkPermissions("view-ssn-number", "card");
-
-			if (result.status !== 403) {
-				setPersonalInfo(true);
-			} else {
-				setPersonalInfo(false);
-			}
+		const res = await fetch("/api/auth/getUserDetails/" + uid);
+		if (res.status === 200) {
+			const resp = await res.json();
+			setDetails(resp.details);
 		} else {
 			setError(true);
 		}
@@ -121,15 +113,15 @@ function DemoPage({
 					403: You are Unauthorized to do this!
 				</Notification>
 			) : null}
-			{showMore ? (
+			{details != null ? (
 				<LearnMoreBadgeCard
-					image={image}
-					title={title}
-					description={description}
-					country={country}
-					badges={badges}
-					visibility={() => setShowMore(false)}
-					personalInfo={personalInfo}
+					uid={uid}
+					avatar={avatar}
+					title={details.title + ((uid == active_uid) ? " (You)" : "")}
+					description={details.description}
+					country={details.country}
+					badges={details.badges}
+					visibility={() => setDetails(null)}
 				/>
 			) : (
 				<Paper
@@ -142,7 +134,7 @@ function DemoPage({
 				>
 					<Avatar src={avatar} size={120} radius={120} mx="auto" />
 					<Text align="center" size="lg" weight={500} mt="md">
-						{name}
+						{name + ((uid == active_uid) ? " (You)" : "")}
 					</Text>
 					<Text align="center" color="dimmed" size="sm">
 						{email} • {job}
@@ -158,13 +150,13 @@ function DemoPage({
 }
 
 function LearnMoreBadgeCard({
-	image,
+	uid,
+	avatar,
 	title,
 	description,
 	country,
 	badges,
 	visibility,
-	personalInfo,
 }) {
 	const useStyles = createStyles((theme) => ({
 		card: {
@@ -174,11 +166,10 @@ function LearnMoreBadgeCard({
 		},
 
 		section: {
-			borderBottom: `1px solid ${
-				theme.colorScheme === "dark"
-					? theme.colors.dark[4]
-					: theme.colors.gray[3]
-			}`,
+			borderBottom: `1px solid ${theme.colorScheme === "dark"
+				? theme.colors.dark[4]
+				: theme.colors.gray[3]
+				}`,
 			paddingLeft: theme.spacing.md,
 			paddingRight: theme.spacing.md,
 			paddingBottom: theme.spacing.md,
@@ -196,7 +187,6 @@ function LearnMoreBadgeCard({
 	}));
 
 	const { classes, theme } = useStyles();
-
 	const features = badges.map((badge) => (
 		<Badge
 			color={theme.colorScheme === "dark" ? "dark" : "gray"}
@@ -210,7 +200,7 @@ function LearnMoreBadgeCard({
 	return (
 		<Card withBorder radius="md" p="md" className={classes.card}>
 			<Card.Section>
-				<Image src={image} alt={title} height={180} />
+				<Image src={avatar} alt={title} height={180} />
 			</Card.Section>
 
 			<Card.Section className={classes.section} mt="md">
@@ -240,7 +230,7 @@ function LearnMoreBadgeCard({
 					justifyContent: "center",
 				}}
 			>
-				{personalInfo ? <ButtonCopy /> : null}
+				<ButtonCopy uid={uid} />
 			</div>
 
 			<Group mt="xs">
@@ -255,22 +245,21 @@ function LearnMoreBadgeCard({
 	);
 }
 
-// Fetches the GPG key stored in the backend.
-const fetchSSNNumber = async () => {
+// Fetches the SSN stored in the backend.
+const fetchSSNNumber = async ({ uid }) => {
 	let SSNNumber;
 
-	const res = await fetch("/api/auth/getSSN");
+	const res = await fetch("/api/auth/getSSN/" + uid);
 	if (res.status === 200) {
 		const json = await res.json();
-		SSNNumber = json.ssn;
+		SSNNumber = "XXX-XX-" + json.details.SSN.split('-')[2];
 	}
-
 	alert(SSNNumber);
-
 	return SSNNumber;
 };
 
-function ButtonCopy() {
+function ButtonCopy(uid) {
+
 	const clipboard = useClipboard();
 	return (
 		<Tooltip
@@ -302,7 +291,7 @@ function ButtonCopy() {
 					},
 					rightIcon: { marginLeft: 22 },
 				}}
-				onClick={() => clipboard.copy(fetchSSNNumber())}
+				onClick={() => clipboard.copy(fetchSSNNumber(uid))}
 			>
 				Copy SSN Number
 			</Button>

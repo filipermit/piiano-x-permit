@@ -21,6 +21,7 @@
     "nextjs-cors": "^2.1.1",
     "permitio": "^1.0.0-rc1",
     "react": "18.2.0",
+    "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
     "supertokens-auth-react": "^0.24.6",
     "supertokens-node": "^11.1.0"
