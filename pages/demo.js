@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 import {
 	Avatar,
 	Text,
@@ -17,55 +17,58 @@ import {
 } from "@mantine/core";
 import { useClipboard } from "@mantine/hooks";
 import { IconCheck, IconX, IconHeart, IconCopy } from "@tabler/icons";
-import { useCookies } from "react-cookie"
+import { useCookies } from "react-cookie";
 
 import styles from "../styles/Home.module.css";
 import db from "../utils/DB";
 import { access } from "../utils/access";
 
 export async function getServerSideProps(context) {
-	var info = {}
+	var info = {};
+	// console.log("context", context.req.cookies);
 	var user = access.getUser(context.req);
 	if (user) {
-		info = db.getInfo(null, ["name", "email", "job", "avatar"])
+		info = db.getInfo(null, ["name", "email", "job", "avatar"]);
 	}
 	return {
 		props: { info }, // will be passed to the page component as props
-	}
+	};
 }
 
 export default function Demo(props) {
-	const [login, setLogin] = useState('');
-	const [cookie, setCookie] = useCookies(["user"])
+	const [login, setLogin] = useState("");
+	const [cookie, setCookie] = useCookies(["user"]);
 	const router = useRouter();
 
 	// Initialize user to nul on load
 	useEffect(() => {
-		setCookie("user", "");
-		setLogin("")
+		// setCookie("user", "");
+		setLogin("");
 		router.replace(router.asPath);
-	}, [])
+	}, []);
 
 	var uids = Object.keys(props.info);
-	const pages = uids.map(uid => {
+	const pages = uids.map((uid) => {
 		var info = props.info[uid];
 		info.uid = uid;
-		return <DemoPage key={uid} active_uid={login} {...info} />
-	})
+		return <DemoPage key={uid} active_uid={login} {...info} />;
+	});
 	return (
 		<div className={styles.demoContainer}>
 			<NativeSelect
-				data={[{ value: '', label: '' }, { value: 'filip@permit.io', label: 'Filip' }, { value: 'ariel@piiano.com', label: 'Ariel' }]}
+				data={[
+					{ value: "", label: "" },
+					{ value: "filip@permit.io", label: "Filip" },
+					{ value: "ariel@piiano.com", label: "Ariel" },
+				]}
 				label="Choose an account"
 				description="Login as"
 				value={login}
-				onChange={
-					(event) => {
-						setCookie("user", "JWT:" + event.target.value);
-						setLogin(event.target.value);
-						router.replace(router.asPath);
-					}
-				}
+				onChange={(event) => {
+					setCookie("user", "JWT:" + event.target.value);
+					setLogin(event.target.value);
+					router.replace(router.asPath);
+				}}
 			/>
 			{pages}
 		</div>
@@ -73,14 +76,7 @@ export default function Demo(props) {
 }
 
 // The main demo page
-function DemoPage({
-	uid,
-	avatar,
-	name,
-	email,
-	job,
-	active_uid,
-}) {
+function DemoPage({ uid, avatar, name, email, job, active_uid }) {
 	const [error, setError] = useState(false);
 	const [details, setDetails] = useState(null);
 	const [prevActiveUid, setPrevActiveUid] = useState(active_uid);
@@ -117,7 +113,7 @@ function DemoPage({
 				<LearnMoreBadgeCard
 					uid={uid}
 					avatar={avatar}
-					title={details.title + ((uid == active_uid) ? " (You)" : "")}
+					title={details.title + (uid == active_uid ? " (You)" : "")}
 					description={details.description}
 					country={details.country}
 					badges={details.badges}
@@ -134,7 +130,7 @@ function DemoPage({
 				>
 					<Avatar src={avatar} size={120} radius={120} mx="auto" />
 					<Text align="center" size="lg" weight={500} mt="md">
-						{name + ((uid == active_uid) ? " (You)" : "")}
+						{name + (uid == active_uid ? " (You)" : "")}
 					</Text>
 					<Text align="center" color="dimmed" size="sm">
 						{email} • {job}
@@ -166,10 +162,11 @@ function LearnMoreBadgeCard({
 		},
 
 		section: {
-			borderBottom: `1px solid ${theme.colorScheme === "dark"
-				? theme.colors.dark[4]
-				: theme.colors.gray[3]
-				}`,
+			borderBottom: `1px solid ${
+				theme.colorScheme === "dark"
+					? theme.colors.dark[4]
+					: theme.colors.gray[3]
+			}`,
 			paddingLeft: theme.spacing.md,
 			paddingRight: theme.spacing.md,
 			paddingBottom: theme.spacing.md,
@@ -252,14 +249,13 @@ const fetchSSNNumber = async ({ uid }) => {
 	const res = await fetch("/api/auth/getSSN/" + uid);
 	if (res.status === 200) {
 		const json = await res.json();
-		SSNNumber = "XXX-XX-" + json.details.SSN.split('-')[2];
+		SSNNumber = "XXX-XX-" + json.details.SSN.split("-")[2];
 	}
 	alert(SSNNumber);
 	return SSNNumber;
 };
 
 function ButtonCopy(uid) {
-
 	const clipboard = useClipboard();
 	return (
 		<Tooltip
