@@ -23,26 +23,14 @@ import styles from "../styles/Home.module.css";
 import db from "../utils/DB";
 import { access } from "../utils/access";
 
-export async function getServerSideProps(context) {
-	var info = {};
-	// console.log("context", context.req.cookies);
-	var user = access.getUser(context.req);
-	if (user) {
-		info = db.getInfo(null, ["name", "email", "job", "avatar"]);
-	}
-	return {
-		props: { info }, // will be passed to the page component as props
-	};
-}
-
 export default function Demo(props) {
 	const [login, setLogin] = useState("");
-	const [cookie, setCookie] = useCookies(["user"]);
+	const [cookie, setCookie, removeCookie] = useCookies(["user"]);
 	const router = useRouter();
 
-	// Initialize user to nul on load
+	// Initialize user to null on load
 	useEffect(() => {
-		// setCookie("user", "");
+		removeCookie(["user"]);
 		setLogin("");
 		router.replace(router.asPath);
 	}, []);
@@ -53,11 +41,12 @@ export default function Demo(props) {
 		info.uid = uid;
 		return <DemoPage key={uid} active_uid={login} {...info} />;
 	});
+
 	return (
 		<div className={styles.demoContainer}>
 			<NativeSelect
 				data={[
-					{ value: "", label: "" },
+					{ value: "unknown@gmail.com", label: "Stranger" },
 					{ value: "filip@permit.io", label: "Filip" },
 					{ value: "ariel@piiano.com", label: "Ariel" },
 				]}
@@ -248,8 +237,19 @@ const fetchSSNNumber = async ({ uid }) => {
 
 	const res = await fetch("/api/auth/getSSN/" + uid);
 	if (res.status === 200) {
-		const json = await res.json();
-		SSNNumber = "XXX-XX-" + json.details.SSN.split("-")[2];
+		const response = await res.json();
+
+		const { email, ssn } = response.details[0];
+
+		// Overcomplicated check but it works! :-)
+		if (document.cookie.includes(email.split("@")[0])) {
+			SSNNumber = ssn;
+		} else {
+			// Masking sensitive information on the frontend.
+			SSNNumber = "XXX-XX-" + ssn.split("-")[2];
+		}
+	} else {
+		SSNNumber = "Unauthorized to view SSN";
 	}
 	alert(SSNNumber);
 	return SSNNumber;
@@ -289,8 +289,19 @@ function ButtonCopy(uid) {
 				}}
 				onClick={() => clipboard.copy(fetchSSNNumber(uid))}
 			>
-				Copy SSN Number
+				View & Copy SSN Number
 			</Button>
 		</Tooltip>
 	);
+}
+
+export async function getServerSideProps(context) {
+	var info = {};
+	var user = access.getUser(context.req);
+	if (user) {
+		info = db.getInfo(null, ["name", "email", "job", "avatar"]);
+	}
+	return {
+		props: { info }, // will be passed to the page component as props
+	};
 }
