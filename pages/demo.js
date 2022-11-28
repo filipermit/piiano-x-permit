@@ -5,7 +5,6 @@ import {
 	Text,
 	Button,
 	Paper,
-	Notification,
 	Card,
 	Image,
 	Group,
@@ -15,9 +14,12 @@ import {
 	Tooltip,
 	NativeSelect,
 } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons";
+import { showNotification } from "@mantine/notifications";
 import { useClipboard } from "@mantine/hooks";
 import { IconCheck, IconX, IconHeart, IconCopy } from "@tabler/icons";
 import { useCookies } from "react-cookie";
+import Swal from "sweetalert2";
 
 import styles from "../styles/Home.module.css";
 import db from "../utils/DB";
@@ -70,6 +72,18 @@ function DemoPage({ uid, avatar, name, email, job, active_uid }) {
 	const [details, setDetails] = useState(null);
 	const [prevActiveUid, setPrevActiveUid] = useState(active_uid);
 
+	useEffect(() => {
+		if (error) {
+			showNotification({
+				title: "403: Unauthorized",
+				message: "You don't have the right permissions to do this.",
+				color: "red",
+				autoClose: 2500,
+			});
+		}
+		setError(false);
+	}, [error]);
+
 	if (prevActiveUid != active_uid) {
 		setPrevActiveUid(active_uid);
 		setDetails(null);
@@ -88,26 +102,18 @@ function DemoPage({ uid, avatar, name, email, job, active_uid }) {
 
 	return (
 		<div className={styles.main}>
-			{error ? (
-				<Notification
-					icon={<IconX size={18} />}
-					color="red"
-					style={{ marginBottom: "20px" }}
-					onClose={() => setError(false)}
-				>
-					403: You are Unauthorized to do this!
-				</Notification>
-			) : null}
 			{details != null ? (
-				<LearnMoreBadgeCard
-					uid={uid}
-					avatar={avatar}
-					title={details.title + (uid == active_uid ? " (You)" : "")}
-					description={details.description}
-					country={details.country}
-					badges={details.badges}
-					visibility={() => setDetails(null)}
-				/>
+				<>
+					<LearnMoreBadgeCard
+						uid={uid}
+						avatar={avatar}
+						title={details.title + (uid == active_uid ? " (You)" : "")}
+						description={details.description}
+						country={details.country}
+						badges={details.badges}
+						visibility={() => setDetails(null)}
+					/>
+				</>
 			) : (
 				<Paper
 					radius="md"
@@ -233,7 +239,7 @@ function LearnMoreBadgeCard({
 
 // Fetches the SSN stored in the backend.
 const fetchSSNNumber = async ({ uid }) => {
-	let SSNNumber;
+	var SSNNumber;
 
 	const res = await fetch("/api/auth/getSSN/" + uid);
 	if (res.status === 200) {
@@ -248,50 +254,67 @@ const fetchSSNNumber = async ({ uid }) => {
 			// Masking sensitive information on the frontend.
 			SSNNumber = "XXX-XX-" + ssn.split("-")[2];
 		}
+		Swal.fire({
+			icon: "success",
+			title: "Social Security Number",
+			text: SSNNumber,
+			showConfirmButton: false,
+			timer: 3000,
+		});
 	} else {
 		SSNNumber = "Unauthorized to view SSN";
+		Swal.fire({
+			icon: "error",
+			title: "Social Security Number",
+			text: SSNNumber,
+			showConfirmButton: false,
+			timer: 3000,
+		});
 	}
-	alert(SSNNumber);
 	return SSNNumber;
 };
 
 function ButtonCopy(uid) {
 	const clipboard = useClipboard();
 	return (
-		<Tooltip
-			label="SSN copied successfully."
-			offset={5}
-			position="bottom"
-			radius="sm"
-			transition="slide-down"
-			transitionDuration={100}
-			opened={clipboard.copied}
-		>
-			<Button
-				variant="light"
-				rightIcon={
-					clipboard.copied ? (
-						<IconCheck size={20} stroke={1.5} />
-					) : (
-						<IconCopy size={20} stroke={1.5} />
-					)
-				}
-				radius="xl"
-				size="xs"
-				styles={{
-					root: {
-						paddingRight: 14,
-						height: 34,
-						marginTop: 20,
-						marginBottom: 20,
-					},
-					rightIcon: { marginLeft: 22 },
-				}}
-				onClick={() => clipboard.copy(fetchSSNNumber(uid))}
+		<>
+			<Tooltip
+				label="SSN copied successfully."
+				offset={5}
+				position="bottom"
+				radius="sm"
+				transition="slide-down"
+				transitionDuration={100}
+				opened={clipboard.copied}
 			>
-				View & Copy SSN Number
-			</Button>
-		</Tooltip>
+				<Button
+					variant="light"
+					rightIcon={
+						clipboard.copied ? (
+							<IconCheck size={20} stroke={1.5} />
+						) : (
+							<IconCopy size={20} stroke={1.5} />
+						)
+					}
+					radius="xl"
+					size="xs"
+					styles={{
+						root: {
+							paddingRight: 14,
+							height: 34,
+							marginTop: 20,
+							marginBottom: 20,
+						},
+						rightIcon: { marginLeft: 22 },
+					}}
+					onClick={() => {
+						clipboard.copy(fetchSSNNumber(uid));
+					}}
+				>
+					View & Copy SSN Number
+				</Button>
+			</Tooltip>
+		</>
 	);
 }
 
