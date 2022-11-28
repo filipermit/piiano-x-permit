@@ -27,23 +27,21 @@ import { access } from "../utils/access";
 
 export default function Demo(props) {
 	const [login, setLogin] = useState("");
-	const [cookie, setCookie, removeCookie] = useCookies(["user"]);
+	const [cookie, setCookie, removeCookie] = useCookies(["Authorization"]);
 	const router = useRouter();
 
 	// Initialize user to null on load
 	useEffect(() => {
-		removeCookie(["user"]);
+		removeCookie(["Authorization"]);
 		setLogin("");
 		router.replace(router.asPath);
 	}, []);
 
-	var uids = Object.keys(props.info);
-	const pages = uids.map((uid) => {
-		var info = props.info[uid];
+	const pages = props.info.map(info => {
+		var uid = info.email;
 		info.uid = uid;
-		return <DemoPage key={uid} active_uid={login} {...info} />;
-	});
-
+		return <DemoPage key={uid} active_uid={login} {...info} />
+	})
 	return (
 		<div className={styles.demoContainer}>
 			<NativeSelect
@@ -56,7 +54,7 @@ export default function Demo(props) {
 				description="Login as"
 				value={login}
 				onChange={(event) => {
-					setCookie("user", "JWT:" + event.target.value);
+					setCookie("Authorization", "Bearer " + event.target.value);
 					setLogin(event.target.value);
 					router.replace(router.asPath);
 				}}
@@ -112,6 +110,7 @@ function DemoPage({ uid, avatar, name, email, job, active_uid }) {
 						country={details.country}
 						badges={details.badges}
 						visibility={() => setDetails(null)}
+						active_uid={active_uid}
 					/>
 				</>
 			) : (
@@ -148,6 +147,7 @@ function LearnMoreBadgeCard({
 	country,
 	badges,
 	visibility,
+	active_uid
 }) {
 	const useStyles = createStyles((theme) => ({
 		card: {
@@ -157,11 +157,10 @@ function LearnMoreBadgeCard({
 		},
 
 		section: {
-			borderBottom: `1px solid ${
-				theme.colorScheme === "dark"
-					? theme.colors.dark[4]
-					: theme.colors.gray[3]
-			}`,
+			borderBottom: `1px solid ${theme.colorScheme === "dark"
+				? theme.colors.dark[4]
+				: theme.colors.gray[3]
+				}`,
 			paddingLeft: theme.spacing.md,
 			paddingRight: theme.spacing.md,
 			paddingBottom: theme.spacing.md,
@@ -222,7 +221,7 @@ function LearnMoreBadgeCard({
 					justifyContent: "center",
 				}}
 			>
-				<ButtonCopy uid={uid} />
+				<ButtonCopy uid={uid} active_uid={active_uid} />
 			</div>
 
 			<Group mt="xs">
@@ -238,17 +237,17 @@ function LearnMoreBadgeCard({
 }
 
 // Fetches the SSN stored in the backend.
-const fetchSSNNumber = async ({ uid }) => {
+const fetchSSNNumber = async ({ uid, active_uid }) => {
 	var SSNNumber;
 
 	const res = await fetch("/api/auth/getSSN/" + uid);
 	if (res.status === 200) {
 		const response = await res.json();
 
-		const { email, ssn } = response.details[0];
+		const { ssn } = response.details;
 
-		// Overcomplicated check but it works! :-)
-		if (document.cookie.includes(email.split("@")[0])) {
+
+		if (active_uid == uid) {
 			SSNNumber = ssn;
 		} else {
 			// Masking sensitive information on the frontend.
@@ -274,7 +273,7 @@ const fetchSSNNumber = async ({ uid }) => {
 	return SSNNumber;
 };
 
-function ButtonCopy(uid) {
+function ButtonCopy(uid, active_uid) {
 	const clipboard = useClipboard();
 	return (
 		<>
@@ -308,7 +307,7 @@ function ButtonCopy(uid) {
 						rightIcon: { marginLeft: 22 },
 					}}
 					onClick={() => {
-						clipboard.copy(fetchSSNNumber(uid));
+						clipboard.copy(fetchSSNNumber(uid, active_uid));
 					}}
 				>
 					View & Copy SSN Number
@@ -319,12 +318,12 @@ function ButtonCopy(uid) {
 }
 
 export async function getServerSideProps(context) {
-	var info = {};
+	var info = [];
 	var user = access.getUser(context.req);
 	if (user) {
-		info = db.getInfo(null, ["name", "email", "job", "avatar"]);
+		info = await db.query('SELECT name,email,job,avatar FROM users')
 	}
 	return {
 		props: { info }, // will be passed to the page component as props
-	};
+	}
 }

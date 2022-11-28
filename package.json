@@ -15,12 +15,13 @@
     "@mantine/hooks": "^5.8.4",
     "@mantine/next": "^5.2.0",
     "@mantine/notifications": "^5.8.4",
-    "@prisma/client": "^4.6.1",
     "@tabler/icons": "^1.84.0",
     "animejs": "^3.2.1",
     "next": "12.2.5",
     "nextjs-cors": "^2.1.1",
     "permitio": "^1.0.0-rc1",
+    "pg": "^8.8.0",
+    "piiano_vault_rest_api": "file:pvault-sdk",
     "react": "18.2.0",
     "react-cookie": "^4.1.1",
     "react-dom": "18.2.0",
@@ -30,7 +31,6 @@
   },
   "devDependencies": {
     "eslint": "8.22.0",
-    "eslint-config-next": "12.2.5",
-    "prisma": "^4.6.1"
+    "eslint-config-next": "12.2.5"
   }
 }

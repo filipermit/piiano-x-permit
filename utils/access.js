@@ -9,17 +9,17 @@ class Access {
 			token: process.env.PERMIT_IO_KEY,
 		});
 	}
-	async isUserAllowed(req, action, resource) {
-		const uid = this.getUser(req);
-		// const permitted = uid == "filip@permit.io" ? true : false;
-		const permitted = await this.permit.check(uid, action, resource);
+	async isUserAllowed(uid, action, resource) {
+		var permitted = false;
+        if (uid == "filip@permit.io" && ("view-ssn-number" == action || "view-personal-info" == action)) permitted=true;
+		//const permitted = await this.permit.check(uid, action, resource);
 		return permitted;
 	}
 	getUser(req) {
-		if (Object.keys(req.cookies).length === 0) {
+		if (Object.keys(req.cookies).length === 0 || req.cookies.Authorization == undefined) {
 			return "unknown@gmail.com";
 		} else {
-			return req.cookies.user.split(":")[1];
+			return req.cookies.Authorization.split("Bearer ")[1];
 		}
 	}
 }

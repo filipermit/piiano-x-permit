@@ -7,6 +7,21 @@ Please follow the below steps to run this demo.
 ---
 
 <h3>1. Complete the onboarding with Permit.io</h3>
+Configure the envrionment varaibles
+```
+# PERMIT
+PERMIT_IO_KEY=KKKKKKKKK
+PERMIT_IO_URL=http://localhost:7766
+# PVAULT
+PVAULT_SERVICE_LICENSE=LLLLLLLLL
+PVAULT_API_KEY=pvaultauth
+PVAULT_BASE_PATH=http://localhost:8123
+# PSQL
+DATABASE_URL=localhost
+```
+
+
+<h3>2. Complete the onboarding with Permit.io</h3>
 
 Navigate to the [Permit App](https://app.permit.io/) and create an account. Run through the onboarding to learn how to work with Permit.
 
@@ -19,7 +34,7 @@ The resource should have the actions: `view-personal-info` & `view-ssn-number`.
 
 If you are struggling with this step, follow the [Quickstart instructions](https://docs.permit.io/quickstart).
 
-<h3>2. Run the Policy Decision Point (PDP)</h3>
+<h3> 3. Run the Policy Decision Point (PDP)</h3>
 
 Download the docker image for the PDP:
 
@@ -29,27 +44,22 @@ Now run the PDP with the command below in your terminal. Make sure to replace th
 
 `docker run -p 7766:7000 --env PDP_API_KEY=<YOUR_PERMIT_API_KEY> permitio/pdp`
 
-<h3>3. Start the app</h3>
+<h3> 4. Register for a free 30-days Piiano Vault license </h3>
+
+See the [getting started guide](https://piiano.com/docs/guides/get-started/).
+
+<h3> 5. Initialize and populate the database and Vault</h3>
+
+`./script/demo.sh`
+
+<h3> 6. Start the app</h3>
 
 `npm install` followed by `npm run dev`
 <br /><br />
 Once the app starts, navigate to `localhost:3000`
 
-<h3>Launch the database</h3>
 
-The database is run with Prisma, which is a Object-Relational Mapper for Node.js.
-It provides an abstraction for interacting with a database directly. Prisma generates type-safe database schemas that map to your database and generates the actual database queries.
-
-If any changes are made to the `schema.prisma` file, you need to re-map the data model to the database schema. If that is the case,
-run the command below:
-
-`npx prisma migrate dev --name init`
-
-Now, just run the docker image to launch your database on port `:5555`.
-
-`docker compose up`
-
-<h3>4. Enjoy the demo!</h3>
+<h3>6. Enjoy the demo!</h3>
 
 ![Alt Text](https://media.giphy.com/media/CnhXn5Z9OUCYTzBAVr/giphy.gif)
 
