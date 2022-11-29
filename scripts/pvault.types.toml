@@ -1,0 +1,20 @@
+[types]
+
+    [types.SSN_protected]
+        based_on = "SSN"
+        transformations = ["idor_protected"]
+
+
+[transformations]
+
+ 
+    [transformations.idor_protected]
+        type = "Javascript"
+        required_props = ["email"]
+        content = '''
+     function transform(context, object, value) {
+        console.log("******", context.param)
+        if (context.param != undefined && (context.param == object.email)) return value;
+        return "***-**-" + value.split("-")[2];
+     }
+  '''

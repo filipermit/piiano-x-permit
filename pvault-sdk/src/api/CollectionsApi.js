@@ -14,7 +14,6 @@
 
 import ApiClient from "../ApiClient";
 import ModelsCollection from '../model/ModelsCollection';
-import ModelsProperty from '../model/ModelsProperty';
 import RestHTTPError from '../model/RestHTTPError';
 
 /**
@@ -85,60 +84,6 @@ export default class CollectionsApi {
     }
 
     /**
-     * Callback function to receive the result of the addCollectionProperty operation.
-     * @callback module:api/CollectionsApi~addCollectionPropertyCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ModelsProperty} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Add collection property
-     * Adds a property to a collection.  The role performing this operation must have the `CapCollectionsWriter` capability. See [Access control](/data-security/identity-and-access-management#access-control) for more information about how capabilities are used to control access to operations.
-     * @param {String} collection The name of the collection to add the property to.
-     * @param {String} property The name of the property to add.
-     * @param {module:model/ModelsProperty} modelsProperty Details of the property.
-     * @param {module:api/CollectionsApi~addCollectionPropertyCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/ModelsProperty}
-     */
-    addCollectionProperty(collection, property, modelsProperty, callback) {
-      let postBody = modelsProperty;
-      // verify the required parameter 'collection' is set
-      if (collection === undefined || collection === null) {
-        throw new Error("Missing the required parameter 'collection' when calling addCollectionProperty");
-      }
-      // verify the required parameter 'property' is set
-      if (property === undefined || property === null) {
-        throw new Error("Missing the required parameter 'property' when calling addCollectionProperty");
-      }
-      // verify the required parameter 'modelsProperty' is set
-      if (modelsProperty === undefined || modelsProperty === null) {
-        throw new Error("Missing the required parameter 'modelsProperty' when calling addCollectionProperty");
-      }
-
-      let pathParams = {
-        'collection': collection,
-        'property': property
-      };
-      let queryParams = {
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
-
-      let authNames = ['bearerAuth'];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = ModelsProperty;
-      return this.apiClient.callApi(
-        '/api/pvlt/1.0/ctl/collections/{collection}/properties/{property}', 'POST',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
-      );
-    }
-
-    /**
      * Callback function to receive the result of the deleteCollection operation.
      * @callback module:api/CollectionsApi~deleteCollectionCallback
      * @param {String} error Error message, if any.
@@ -175,54 +120,6 @@ export default class CollectionsApi {
       let returnType = null;
       return this.apiClient.callApi(
         '/api/pvlt/1.0/ctl/collections/{collection}', 'DELETE',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
-      );
-    }
-
-    /**
-     * Callback function to receive the result of the deleteCollectionProperty operation.
-     * @callback module:api/CollectionsApi~deleteCollectionPropertyCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Delete collection property
-     * Deletes a property from a collection.  Deleting a property removes it also from existing objects in the collection. This operation is irreversible.  The role that performs this operation must have the `CapCollectionsWriter` capability. See [Access control](/data-security/identity-and-access-management#access-control) for more information about how capabilities are used to control access to operations.
-     * @param {String} collection The name of the collection containing the property.
-     * @param {String} property The name of the property.
-     * @param {module:api/CollectionsApi~deleteCollectionPropertyCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    deleteCollectionProperty(collection, property, callback) {
-      let postBody = null;
-      // verify the required parameter 'collection' is set
-      if (collection === undefined || collection === null) {
-        throw new Error("Missing the required parameter 'collection' when calling deleteCollectionProperty");
-      }
-      // verify the required parameter 'property' is set
-      if (property === undefined || property === null) {
-        throw new Error("Missing the required parameter 'property' when calling deleteCollectionProperty");
-      }
-
-      let pathParams = {
-        'collection': collection,
-        'property': property
-      };
-      let queryParams = {
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
-
-      let authNames = ['bearerAuth'];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = null;
-      return this.apiClient.callApi(
-        '/api/pvlt/1.0/ctl/collections/{collection}/properties/{property}', 'DELETE',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );
@@ -321,102 +218,6 @@ export default class CollectionsApi {
     }
 
     /**
-     * Callback function to receive the result of the getCollectionProperty operation.
-     * @callback module:api/CollectionsApi~getCollectionPropertyCallback
-     * @param {String} error Error message, if any.
-     * @param {module:model/ModelsProperty} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Get collection property
-     * Gets a property of a collection.  The role that performs this operation must have the `CapCollectionsReader` capability. See [Access control](/data-security/identity-and-access-management#access-control) for more information about how capabilities are used to control access to operations.
-     * @param {String} collection The ID of the collection containing the property.
-     * @param {String} property The name of the property.
-     * @param {module:api/CollectionsApi~getCollectionPropertyCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link module:model/ModelsProperty}
-     */
-    getCollectionProperty(collection, property, callback) {
-      let postBody = null;
-      // verify the required parameter 'collection' is set
-      if (collection === undefined || collection === null) {
-        throw new Error("Missing the required parameter 'collection' when calling getCollectionProperty");
-      }
-      // verify the required parameter 'property' is set
-      if (property === undefined || property === null) {
-        throw new Error("Missing the required parameter 'property' when calling getCollectionProperty");
-      }
-
-      let pathParams = {
-        'collection': collection,
-        'property': property
-      };
-      let queryParams = {
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
-
-      let authNames = ['bearerAuth'];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = ModelsProperty;
-      return this.apiClient.callApi(
-        '/api/pvlt/1.0/ctl/collections/{collection}/properties/{property}', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
-      );
-    }
-
-    /**
-     * Callback function to receive the result of the listCollectionProperties operation.
-     * @callback module:api/CollectionsApi~listCollectionPropertiesCallback
-     * @param {String} error Error message, if any.
-     * @param {Array.<module:model/ModelsProperty>} data The data returned by the service call.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * List collection properties
-     * Lists the properties of a collection.  The collection properties determines the properties shared by each object in the collection.  This operation return a JSON object. The information returned contains the properties defined by the user and the built-in properties added by Vault when the collection was created.  The role that performs this operation must have the `CapCollectionsReader` capability. See [Access control](/data-security/identity-and-access-management#access-control) for more information about how capabilities are used to control access to operations.
-     * @param {String} collection The name of the collection containing the properties.
-     * @param {Object} opts Optional parameters
-     * @param {Array.<module:model/String>} opts.options Options for the operation. Options include:  - `show_builtins` – show built-in properties in the response. 
-     * @param {module:api/CollectionsApi~listCollectionPropertiesCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/ModelsProperty>}
-     */
-    listCollectionProperties(collection, opts, callback) {
-      opts = opts || {};
-      let postBody = null;
-      // verify the required parameter 'collection' is set
-      if (collection === undefined || collection === null) {
-        throw new Error("Missing the required parameter 'collection' when calling listCollectionProperties");
-      }
-
-      let pathParams = {
-        'collection': collection
-      };
-      let queryParams = {
-        'options': this.apiClient.buildCollectionParam(opts['options'], 'multi')
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
-
-      let authNames = ['bearerAuth'];
-      let contentTypes = [];
-      let accepts = ['application/json'];
-      let returnType = [ModelsProperty];
-      return this.apiClient.callApi(
-        '/api/pvlt/1.0/ctl/collections/{collection}/properties', 'GET',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
-      );
-    }
-
-    /**
      * Callback function to receive the result of the updateCollection operation.
      * @callback module:api/CollectionsApi~updateCollectionCallback
      * @param {String} error Error message, if any.
@@ -465,59 +266,6 @@ export default class CollectionsApi {
       let returnType = ModelsCollection;
       return this.apiClient.callApi(
         '/api/pvlt/1.0/ctl/collections/{collection}', 'PATCH',
-        pathParams, queryParams, headerParams, formParams, postBody,
-        authNames, contentTypes, accepts, returnType, null, callback
-      );
-    }
-
-    /**
-     * Callback function to receive the result of the updateCollectionProperty operation.
-     * @callback module:api/CollectionsApi~updateCollectionPropertyCallback
-     * @param {String} error Error message, if any.
-     * @param data This operation does not return a value.
-     * @param {String} response The complete HTTP response.
-     */
-
-    /**
-     * Update collection property
-     * ** Not implemented **  Modifies the property of a collection. Properties in use on objects in the collection cannot be updated. Partial update is not supported, any property not included in the request is replaced with its default values.  The role that performs this operation must have the `CapCollectionsWriter` capability. See [Access control](/data-security/identity-and-access-management#access-control) for more information about how capabilities are used to control access to operations.
-     * @param {String} collection The name of the collection containing the property.
-     * @param {String} property The name of the property.
-     * @param {module:model/ModelsProperty} modelsProperty property info
-     * @param {module:api/CollectionsApi~updateCollectionPropertyCallback} callback The callback function, accepting three arguments: error, data, response
-     */
-    updateCollectionProperty(collection, property, modelsProperty, callback) {
-      let postBody = modelsProperty;
-      // verify the required parameter 'collection' is set
-      if (collection === undefined || collection === null) {
-        throw new Error("Missing the required parameter 'collection' when calling updateCollectionProperty");
-      }
-      // verify the required parameter 'property' is set
-      if (property === undefined || property === null) {
-        throw new Error("Missing the required parameter 'property' when calling updateCollectionProperty");
-      }
-      // verify the required parameter 'modelsProperty' is set
-      if (modelsProperty === undefined || modelsProperty === null) {
-        throw new Error("Missing the required parameter 'modelsProperty' when calling updateCollectionProperty");
-      }
-
-      let pathParams = {
-        'collection': collection,
-        'property': property
-      };
-      let queryParams = {
-      };
-      let headerParams = {
-      };
-      let formParams = {
-      };
-
-      let authNames = ['bearerAuth'];
-      let contentTypes = ['application/json'];
-      let accepts = ['application/json'];
-      let returnType = null;
-      return this.apiClient.callApi(
-        '/api/pvlt/1.0/ctl/collections/{collection}/properties/{property}', 'PATCH',
         pathParams, queryParams, headerParams, formParams, postBody,
         authNames, contentTypes, accepts, returnType, null, callback
       );

@@ -123,12 +123,10 @@ var defaultClient = PiianoVaultRestApi.ApiClient.instance;
 var bearerAuth = defaultClient.authentications['bearerAuth'];
 bearerAuth.accessToken = "YOUR ACCESS TOKEN"
 
-var api = new PiianoVaultRestApi.CollectionsApi()
-var modelsCollection = new PiianoVaultRestApi.ModelsCollection(); // {ModelsCollection} Details of the collection including its properties.
-var opts = {
-  'format': "'json'", // {String} The format of the response. Overrides any `Accept` header value provided.
-  'options': ["null"] // {[String]} Options for the operation. Options include: - `show_builtins` – show built-in properties in the response. 
-};
+var api = new PiianoVaultRestApi.CollectionPropertiesApi()
+var collection = buyers; // {String} The name of the collection to add the property to.
+var property = buyer_phone; // {String} The name of the property to add.
+var modelsProperty = {"description":"The phone number of the buyer.","is_encrypted":true,"is_index":false,"is_nullable":true,"is_unique":false,"name":"buyer_phone","pii_type_name":"PHONE_NUMBER"}; // {ModelsProperty} Details of the property.
 var callback = function(error, data, response) {
   if (error) {
     console.error(error);
@@ -136,7 +134,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-api.addCollection(modelsCollection, opts, callback);
+api.addCollectionProperty(collection, property, modelsProperty, callback);
 
 ```
 
@@ -146,16 +144,16 @@ All URIs are relative to *http://localhost:8123*
 
 Class | Method | HTTP request | Description
 ------------ | ------------- | ------------- | -------------
+*PiianoVaultRestApi.CollectionPropertiesApi* | [**addCollectionProperty**](docs/CollectionPropertiesApi.md#addCollectionProperty) | **POST** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Add collection property
+*PiianoVaultRestApi.CollectionPropertiesApi* | [**deleteCollectionProperty**](docs/CollectionPropertiesApi.md#deleteCollectionProperty) | **DELETE** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Delete collection property
+*PiianoVaultRestApi.CollectionPropertiesApi* | [**getCollectionProperty**](docs/CollectionPropertiesApi.md#getCollectionProperty) | **GET** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Get collection property
+*PiianoVaultRestApi.CollectionPropertiesApi* | [**listCollectionProperties**](docs/CollectionPropertiesApi.md#listCollectionProperties) | **GET** /api/pvlt/1.0/ctl/collections/{collection}/properties | List collection properties
+*PiianoVaultRestApi.CollectionPropertiesApi* | [**updateCollectionProperty**](docs/CollectionPropertiesApi.md#updateCollectionProperty) | **PATCH** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Update collection property
 *PiianoVaultRestApi.CollectionsApi* | [**addCollection**](docs/CollectionsApi.md#addCollection) | **POST** /api/pvlt/1.0/ctl/collections | Add collection
-*PiianoVaultRestApi.CollectionsApi* | [**addCollectionProperty**](docs/CollectionsApi.md#addCollectionProperty) | **POST** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Add collection property
 *PiianoVaultRestApi.CollectionsApi* | [**deleteCollection**](docs/CollectionsApi.md#deleteCollection) | **DELETE** /api/pvlt/1.0/ctl/collections/{collection} | Delete collection
-*PiianoVaultRestApi.CollectionsApi* | [**deleteCollectionProperty**](docs/CollectionsApi.md#deleteCollectionProperty) | **DELETE** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Delete collection property
 *PiianoVaultRestApi.CollectionsApi* | [**getAllCollections**](docs/CollectionsApi.md#getAllCollections) | **GET** /api/pvlt/1.0/ctl/collections | List collections
 *PiianoVaultRestApi.CollectionsApi* | [**getCollection**](docs/CollectionsApi.md#getCollection) | **GET** /api/pvlt/1.0/ctl/collections/{collection} | Get collection
-*PiianoVaultRestApi.CollectionsApi* | [**getCollectionProperty**](docs/CollectionsApi.md#getCollectionProperty) | **GET** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Get collection property
-*PiianoVaultRestApi.CollectionsApi* | [**listCollectionProperties**](docs/CollectionsApi.md#listCollectionProperties) | **GET** /api/pvlt/1.0/ctl/collections/{collection}/properties | List collection properties
 *PiianoVaultRestApi.CollectionsApi* | [**updateCollection**](docs/CollectionsApi.md#updateCollection) | **PATCH** /api/pvlt/1.0/ctl/collections/{collection} | Update collection
-*PiianoVaultRestApi.CollectionsApi* | [**updateCollectionProperty**](docs/CollectionsApi.md#updateCollectionProperty) | **PATCH** /api/pvlt/1.0/ctl/collections/{collection}/properties/{property} | Update collection property
 *PiianoVaultRestApi.ConfigVarsApi* | [**clearAllConfVars**](docs/ConfigVarsApi.md#clearAllConfVars) | **DELETE** /api/pvlt/1.0/system/confvar | Clear configuration variables
 *PiianoVaultRestApi.ConfigVarsApi* | [**getConfVar**](docs/ConfigVarsApi.md#getConfVar) | **GET** /api/pvlt/1.0/system/confvar/{name} | Get configuration variable
 *PiianoVaultRestApi.ConfigVarsApi* | [**setConfVar**](docs/ConfigVarsApi.md#setConfVar) | **POST** /api/pvlt/1.0/system/confvar/{name} | Set configuration variable
@@ -224,7 +222,6 @@ Class | Method | HTTP request | Description
  - [PiianoVaultRestApi.ModelsProperty](docs/ModelsProperty.md)
  - [PiianoVaultRestApi.ModelsQuery](docs/ModelsQuery.md)
  - [PiianoVaultRestApi.ModelsQueryToken](docs/ModelsQueryToken.md)
- - [PiianoVaultRestApi.ModelsRotatedToken](docs/ModelsRotatedToken.md)
  - [PiianoVaultRestApi.ModelsTokenAggregatedMetadata](docs/ModelsTokenAggregatedMetadata.md)
  - [PiianoVaultRestApi.ModelsTokenMetadata](docs/ModelsTokenMetadata.md)
  - [PiianoVaultRestApi.ModelsTokenRefMetadata](docs/ModelsTokenRefMetadata.md)

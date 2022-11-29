@@ -15,19 +15,18 @@ docker run --rm \
   -e PVAULT_SERVICE_LICENSE=$PVAULT_SERVICE_LICENSE \
   -e PVAULT_FEATURES_CUSTOM_TYPES_ENABLE=true \
   -d \
+  -v $dir_path/pvault.types.toml:/etc/pvault/pvault.types.toml \
+  --mount type=tmpfs,destination=/var/lib/postgresql/data \
   piiano/pvault-dev:0.9.8
-#  -v $(pwd)/pvault.types.toml:/etc/pvault/pvault.types.toml \
-#  --mount type=tmpfs,destination=/var/lib/postgresql/data \
 
 until ${pvault} version > /dev/null 2>&1
 do echo "Waiting for the vault to start ..." && sleep 1; done
 
 ${pvault} collection add --collection-pvschema " \
 users PERSONS ( \
-  ssn SSN UNIQUE COMMENT 'Social security number', \
   email EMAIL UNIQUE NOT NULL \
 );"
-#pvault collection property add --collection users --name ssn --pii-type-name SSN_protected
+${pvault} collection property add --collection users --name ssn --pii-type-name SSN_protected --is-unique=true --is-index=true
 
 
 ${pvault} object add --fields '{ "ssn":"123-12-1111", "email":"ariel@piiano.com"}' --collection users

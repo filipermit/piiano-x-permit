@@ -7,13 +7,13 @@ class Vault {
 		this.objApis = new PvaultSdk.ObjectsApi(this.vault);	
 	}
 
-    async searchObjects(match, props) {
+    async searchObjects(match, props, xTransParam) {
         const { error, data, response } = await new Promise((resolve) => {
 			this.objApis.searchObjects(
 				"users",
 				"AppFunctionality",
 				{ match },
-				{ props },
+				{ props, xTransParam },
 				(error, data, response ) => resolve({ error, data, response  })
 			);
 		});

@@ -47,7 +47,6 @@ import ModelsProductVersion from './model/ModelsProductVersion';
 import ModelsProperty from './model/ModelsProperty';
 import ModelsQuery from './model/ModelsQuery';
 import ModelsQueryToken from './model/ModelsQueryToken';
-import ModelsRotatedToken from './model/ModelsRotatedToken';
 import ModelsTokenAggregatedMetadata from './model/ModelsTokenAggregatedMetadata';
 import ModelsTokenMetadata from './model/ModelsTokenMetadata';
 import ModelsTokenRefMetadata from './model/ModelsTokenRefMetadata';
@@ -59,6 +58,7 @@ import ModelsUserName from './model/ModelsUserName';
 import ModelsVaultGeneration from './model/ModelsVaultGeneration';
 import ModelsWorker from './model/ModelsWorker';
 import RestHTTPError from './model/RestHTTPError';
+import CollectionPropertiesApi from './api/CollectionPropertiesApi';
 import CollectionsApi from './api/CollectionsApi';
 import ConfigVarsApi from './api/ConfigVarsApi';
 import DataTypesAndTransformationsApi from './api/DataTypesAndTransformationsApi';
@@ -311,12 +311,6 @@ export {
     ModelsQueryToken,
 
     /**
-     * The ModelsRotatedToken model constructor.
-     * @property {module:model/ModelsRotatedToken}
-     */
-    ModelsRotatedToken,
-
-    /**
      * The ModelsTokenAggregatedMetadata model constructor.
      * @property {module:model/ModelsTokenAggregatedMetadata}
      */
@@ -381,6 +375,12 @@ export {
      * @property {module:model/RestHTTPError}
      */
     RestHTTPError,
+
+    /**
+    * The CollectionPropertiesApi service constructor.
+    * @property {module:api/CollectionPropertiesApi}
+    */
+    CollectionPropertiesApi,
 
     /**
     * The CollectionsApi service constructor.

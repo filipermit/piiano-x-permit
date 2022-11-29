@@ -15,7 +15,6 @@
 import ApiClient from "../ApiClient";
 import ModelsDetokenizedToken from '../model/ModelsDetokenizedToken';
 import ModelsQueryToken from '../model/ModelsQueryToken';
-import ModelsRotatedToken from '../model/ModelsRotatedToken';
 import ModelsTokenMetadata from '../model/ModelsTokenMetadata';
 import ModelsTokenValue from '../model/ModelsTokenValue';
 import ModelsTokenizeRequest from '../model/ModelsTokenizeRequest';
@@ -170,7 +169,7 @@ export default class TokensApi {
      * Callback function to receive the result of the rotateTokens operation.
      * @callback module:api/TokensApi~rotateTokensCallback
      * @param {String} error Error message, if any.
-     * @param {Array.<module:model/ModelsRotatedToken>} data The data returned by the service call.
+     * @param {Object.<String, {String: String}>} data The data returned by the service call.
      * @param {String} response The complete HTTP response.
      */
 
@@ -184,7 +183,7 @@ export default class TokensApi {
      * @param {String} opts.adhocReason An ad-hoc reason for accessing the Vault data.
      * @param {Boolean} opts.reloadCache Reloads the cache before the action.
      * @param {module:api/TokensApi~rotateTokensCallback} callback The callback function, accepting three arguments: error, data, response
-     * data is of type: {@link Array.<module:model/ModelsRotatedToken>}
+     * data is of type: {@link Object.<String, {String: String}>}
      */
     rotateTokens(tokenId, collection, reason, opts, callback) {
       opts = opts || {};
@@ -219,7 +218,7 @@ export default class TokensApi {
       let authNames = ['bearerAuth'];
       let contentTypes = [];
       let accepts = ['application/json'];
-      let returnType = [ModelsRotatedToken];
+      let returnType = {'String': 'String'};
       return this.apiClient.callApi(
         '/api/pvlt/1.0/data/collections/{collection}/rotate/tokens', 'POST',
         pathParams, queryParams, headerParams, formParams, postBody,

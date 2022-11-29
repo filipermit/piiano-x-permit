@@ -22,7 +22,7 @@ class ModelsProperty {
     /**
      * Constructs a new <code>ModelsProperty</code>.
      * @alias module:model/ModelsProperty
-     * @param name {String} The name of the property. This is the name of the column in the data_{collection_name} table. Must be unique.
+     * @param name {String} The name of the property. Must be unique.
      * @param piiTypeName {String} The name of the data type of the property.
      */
     constructor(name, piiTypeName) { 
@@ -152,7 +152,7 @@ ModelsProperty.prototype['is_unique'] = false;
 ModelsProperty.prototype['modification_time'] = undefined;
 
 /**
- * The name of the property. This is the name of the column in the data_{collection_name} table. Must be unique.
+ * The name of the property. Must be unique.
  * @member {String} name
  */
 ModelsProperty.prototype['name'] = undefined;

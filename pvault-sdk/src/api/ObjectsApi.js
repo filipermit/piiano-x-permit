@@ -180,6 +180,7 @@ export default class ObjectsApi {
      * @param {Boolean} opts.reloadCache Reloads the cache before the action.
      * @param {Number} opts.pageSize The maximum number of items to return in this request. If not specified, the default value is used. The default value is the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`. The value must not exceed the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`
      * @param {String} opts.cursor The cursor represents the state of consecutive queries for the same request parameters. In the first call, the cursor may be omitted or specified as an empty string. In consecutive calls, it should be set to the value of the cursor field of the models.ObjectFieldsPage returned by the previous call. Note: when the `id` is specified, paging is not supported. In this case, if the number of `id` values specified exceeds the maximum page size, the method returns 400 (BAD REQUEST).
+     * @param {String} opts.xTransParam Extra parameter to pass on to the transformations.
      * @param {Array.<String>} opts.id A comma-separated list of object IDs. If not provided, all objects are returned. The number of IDs provided cannot exceed the default page size.
      * @param {Array.<String>} opts.options Options for the operation. Options include: - `unsafe` – fetch all the properties, cannot be specified with `props`. - `show_builtins` – show built-in properties, can only be specified with `unsafe`. - `deleted` – get only deleted objects. 
      * @param {Array.<String>} opts.props The list of property names and transformations. To include multiple names and transformation bindings, provide a comma-separated list. For example, `props=first_name,last_name`. If the `unsafe` option is used, must be empty.
@@ -212,6 +213,7 @@ export default class ObjectsApi {
         'props': this.apiClient.buildCollectionParam(opts['props'], 'multi')
       };
       let headerParams = {
+        'X-Trans-Param': opts['xTransParam']
       };
       let formParams = {
       };
@@ -246,6 +248,7 @@ export default class ObjectsApi {
      * @param {Boolean} opts.reloadCache Reloads the cache before the action.
      * @param {Number} opts.pageSize The maximum number of items to return in this request. If not specified, the default value is used. The default value is the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`. The value must not exceed the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`
      * @param {String} opts.cursor The cursor represents the state of consecutive queries for the same request parameters. In the first call, the cursor may be omitted or specified as an empty string. In consecutive calls, it should be set to the value of the cursor field of the models.ObjectFieldsPage returned by the previous call. Note: when the `id` is specified, paging is not supported. In this case, if the number of `id` values specified exceeds the maximum page size, the method returns 400 (BAD REQUEST).
+     * @param {String} opts.xTransParam Extra parameter to pass on to the transformations.
      * @param {Array.<String>} opts.options Options for the operation. Options include: - `deleted` – get only deleted objects. 
      * @param {Array.<String>} opts.id The ID of the object. If not given - return all objects
      * @param {module:api/ObjectsApi~getObjectsPropertyCallback} callback The callback function, accepting three arguments: error, data, response
@@ -281,6 +284,7 @@ export default class ObjectsApi {
         'id': this.apiClient.buildCollectionParam(opts['id'], 'multi')
       };
       let headerParams = {
+        'X-Trans-Param': opts['xTransParam']
       };
       let formParams = {
       };
@@ -315,6 +319,7 @@ export default class ObjectsApi {
      * @param {Boolean} opts.reloadCache Reloads the cache before the action.
      * @param {Number} opts.pageSize The maximum number of items to return in this request. If not specified, the default value is used. The default value is the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`. The value must not exceed the value specified in the environment variable `PVAULT_SERVICE_DEFAULT_PAGE_SIZE`
      * @param {String} opts.cursor The cursor represents the state of consecutive queries for the same request parameters. In the first call, the cursor may be omitted or specified as an empty string. In consecutive calls, it should be set to the value of the cursor field of the models.ObjectFieldsPage returned by the previous call. Note: when the `id` is specified, paging is not supported. In this case, if the number of `id` values specified exceeds the maximum page size, the method returns 400 (BAD REQUEST).
+     * @param {String} opts.xTransParam Extra parameter to pass on to the transformations.
      * @param {Array.<String>} opts.options Options for the operation. Options include: - `unsafe` – fetch all the properties, cannot be specified with `props`. - `show_builtins` – show built-in properties, can only be specified with `unsafe`. - `deleted` – get only deleted objects. 
      * @param {Array.<String>} opts.props The list of property names and transformations. To include multiple names and transformation bindings, provide a comma-separated list. For example, `props=first_name,last_name`. If the `unsafe` option is used, must be empty.
      * @param {module:api/ObjectsApi~searchObjectsCallback} callback The callback function, accepting three arguments: error, data, response
@@ -349,6 +354,7 @@ export default class ObjectsApi {
         'props': this.apiClient.buildCollectionParam(opts['props'], 'multi')
       };
       let headerParams = {
+        'X-Trans-Param': opts['xTransParam']
       };
       let formParams = {
       };
