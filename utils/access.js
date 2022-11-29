@@ -11,12 +11,19 @@ class Access {
 	}
 	async isUserAllowed(uid, action, resource) {
 		var permitted = false;
-        if (uid == "filip@permit.io" && ("view-ssn-number" == action || "view-personal-info" == action)) permitted=true;
-		//const permitted = await this.permit.check(uid, action, resource);
+		if (
+			uid == "filip@permit.io" &&
+			("view-ssn-number" == action || "view-personal-info" == action)
+		)
+			permitted = true;
+		// const permitted = await this.permit.check(uid, action, resource);
 		return permitted;
 	}
 	getUser(req) {
-		if (Object.keys(req.cookies).length === 0 || req.cookies.Authorization == undefined) {
+		if (
+			Object.keys(req.cookies).length === 0 ||
+			req.cookies.Authorization == undefined
+		) {
 			return "unknown@gmail.com";
 		} else {
 			return req.cookies.Authorization.split("Bearer ")[1];

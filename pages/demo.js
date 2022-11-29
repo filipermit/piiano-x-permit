@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { DemoContext } from "./_app.js";
 import { useRouter } from "next/router";
 import {
 	Avatar,
@@ -13,8 +14,8 @@ import {
 	createStyles,
 	Tooltip,
 	NativeSelect,
+	Switch,
 } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons";
 import { showNotification } from "@mantine/notifications";
 import { useClipboard } from "@mantine/hooks";
 import { IconCheck, IconX, IconHeart, IconCopy } from "@tabler/icons";
@@ -30,6 +31,8 @@ export default function Demo(props) {
 	const [cookie, setCookie, removeCookie] = useCookies(["Authorization"]);
 	const router = useRouter();
 
+	const context = useContext(DemoContext);
+
 	// Initialize user to null on load
 	useEffect(() => {
 		removeCookie(["Authorization"]);
@@ -37,28 +40,34 @@ export default function Demo(props) {
 		router.replace(router.asPath);
 	}, []);
 
-	const pages = props.info.map(info => {
+	const pages = props.info.map((info) => {
 		var uid = info.email;
 		info.uid = uid;
-		return <DemoPage key={uid} active_uid={login} {...info} />
-	})
+		return <DemoPage key={uid} active_uid={login} {...info} />;
+	});
 	return (
 		<div className={styles.demoContainer}>
-			<NativeSelect
-				data={[
-					{ value: "unknown@gmail.com", label: "Stranger" },
-					{ value: "filip@permit.io", label: "Filip" },
-					{ value: "ariel@piiano.com", label: "Ariel" },
-				]}
-				label="Choose an account"
-				description="Login as"
-				value={login}
-				onChange={(event) => {
-					setCookie("Authorization", "Bearer " + event.target.value);
-					setLogin(event.target.value);
-					router.replace(router.asPath);
-				}}
-			/>
+			<div className={styles.controls}>
+				<Switch
+					label="Toggle Safe Mode"
+					onClick={() => context.setToggleSafeMode(!context.toggleSafeMode)}
+				/>
+				<NativeSelect
+					data={[
+						{ value: "unknown@gmail.com", label: "Stranger" },
+						{ value: "filip@permit.io", label: "Filip" },
+						{ value: "ariel@piiano.com", label: "Ariel" },
+					]}
+					label="Choose an account"
+					description="Login as"
+					value={login}
+					onChange={(event) => {
+						setCookie("Authorization", "Bearer " + event.target.value);
+						setLogin(event.target.value);
+						router.replace(router.asPath);
+					}}
+				/>
+			</div>
 			{pages}
 		</div>
 	);
@@ -147,7 +156,7 @@ function LearnMoreBadgeCard({
 	country,
 	badges,
 	visibility,
-	active_uid
+	active_uid,
 }) {
 	const useStyles = createStyles((theme) => ({
 		card: {
@@ -157,10 +166,11 @@ function LearnMoreBadgeCard({
 		},
 
 		section: {
-			borderBottom: `1px solid ${theme.colorScheme === "dark"
-				? theme.colors.dark[4]
-				: theme.colors.gray[3]
-				}`,
+			borderBottom: `1px solid ${
+				theme.colorScheme === "dark"
+					? theme.colors.dark[4]
+					: theme.colors.gray[3]
+			}`,
 			paddingLeft: theme.spacing.md,
 			paddingRight: theme.spacing.md,
 			paddingBottom: theme.spacing.md,
@@ -237,15 +247,20 @@ function LearnMoreBadgeCard({
 }
 
 // Fetches the SSN stored in the backend.
-const fetchSSNNumber = async ({ uid, active_uid }) => {
+async function fetchSSNNumber(path, { uid, active_uid }) {
 	var SSNNumber;
 
-	const res = await fetch("/api/auth/getSSN/" + uid);
+	// switch between
+	// const res = toggleSafeMode
+	// 	? await fetch("/api/auth/getSSN/" + uid)
+	// 	: await fetch("/api/auth/getSSNFromVault/" + uid);
+
+	const res = await fetch(path + uid);
+
 	if (res.status === 200) {
 		const response = await res.json();
 
 		const { ssn } = response.details;
-
 
 		if (active_uid == uid) {
 			SSNNumber = ssn;
@@ -271,9 +286,11 @@ const fetchSSNNumber = async ({ uid, active_uid }) => {
 		});
 	}
 	return SSNNumber;
-};
+}
 
 function ButtonCopy(uid, active_uid) {
+	const context = useContext(DemoContext);
+
 	const clipboard = useClipboard();
 	return (
 		<>
@@ -307,7 +324,15 @@ function ButtonCopy(uid, active_uid) {
 						rightIcon: { marginLeft: 22 },
 					}}
 					onClick={() => {
-						clipboard.copy(fetchSSNNumber(uid, active_uid));
+						clipboard.copy(
+							fetchSSNNumber(
+								context.toggleSafeMode
+									? "/api/auth/getSSNFromVault/"
+									: "/api/auth/getSSN/",
+								uid,
+								active_uid
+							)
+						);
 					}}
 				>
 					View & Copy SSN Number
@@ -321,9 +346,9 @@ export async function getServerSideProps(context) {
 	var info = [];
 	var user = access.getUser(context.req);
 	if (user) {
-		info = await db.query('SELECT name,email,job,avatar FROM users')
+		info = await db.query("SELECT name,email,job,avatar FROM users");
 	}
 	return {
 		props: { info }, // will be passed to the page component as props
-	}
+	};
 }

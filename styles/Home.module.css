@@ -6,6 +6,21 @@
   height: 100vh;
 }
 
+.controls {
+  background-color: white;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  flex-direction: column;
+  height: 280px;
+  border-radius: 10px;
+}
+
+.controls > * {
+  width: -webkit-fill-available;
+}
+
 .main {
   padding: 0 1rem;
 }

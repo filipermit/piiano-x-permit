@@ -16,9 +16,16 @@ async function verifyAndFetchSSNNumber(req, res) {
 	// and the permission check for viewing private SSN passes OR user has ability to view
 	// all SSN numbers - then fetch data from database.
 	if (checkPublicSSN || reqUid == uid) {
-		var info = await db.query("SELECT ssn FROM users WHERE email=$1", [uid]);
-		result = { details: info[0] };
-
+		const { e, d, r } = await new Promise((resolve) => {
+			db.vaultObjs().searchObjects(
+				"users",
+				"AppFunctionality",
+				{ match: { email: uid } },
+				{ props: ["ssn.mask"] },
+				(e, d, r) => resolve({ e, d, r })
+			);
+		});
+		result = { details: { ssn: d.results[0]["ssn.mask"] } };
 		res.status(200).send(result);
 	} else {
 		res.status(403).send("Unauthorized");
