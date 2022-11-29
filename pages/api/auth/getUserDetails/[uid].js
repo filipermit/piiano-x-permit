@@ -13,6 +13,7 @@ async function verifyAndFetchDetails(req, res) {
 
 	// If the uid of user card is the same as the current user that is logged in,
 	// OR user has ability to view all info - then fetch data from database.
+    
 	if (checkPersonalInfo || reqUid == uid) {
 		var info = await db.query(
 			"SELECT title,description,country,badges FROM users JOIN \

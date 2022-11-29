@@ -3,7 +3,6 @@ import db from "../../../../utils/DB";
 
 async function verifyAndFetchSSNNumber(req, res) {
 	var uid = req.query.uid;
-	var result = null;
 
 	var reqUid = req.query.uid;
 	const checkPublicSSN = await access.isUserAllowed(
@@ -17,9 +16,7 @@ async function verifyAndFetchSSNNumber(req, res) {
 	// all SSN numbers - then fetch data from database.
 	if (checkPublicSSN || reqUid == uid) {
 		var info = await db.query("SELECT ssn FROM users WHERE email=$1", [uid]);
-		result = { details: info[0] };
-
-		res.status(200).send(result);
+		res.status(200).send( info[0] );
 	} else {
 		res.status(403).send("Unauthorized");
 	}

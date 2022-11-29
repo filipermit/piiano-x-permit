@@ -258,9 +258,7 @@ async function fetchSSNNumber(path, { uid, active_uid }) {
 	const res = await fetch(path + uid);
 
 	if (res.status === 200) {
-		const response = await res.json();
-
-		const { ssn } = response.details;
+		const { ssn } = await res.json();
 
 		if (active_uid == uid) {
 			SSNNumber = ssn;
