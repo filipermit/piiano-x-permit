@@ -55,8 +55,8 @@ export default function Demo(props) {
 				<NativeSelect
 					data={[
 						{ value: "unknown@gmail.com", label: "Stranger" },
-						{ value: "filip@permit.io", label: "Filip" },
-						{ value: "ariel@piiano.com", label: "Ariel" },
+						{ value: "ariel@piiano.com", label: "Ariel - Friend" },
+						{ value: "filip@permit.io", label: "Filip - Admin" },
 					]}
 					label="Choose an account"
 					description="Login as"
@@ -249,11 +249,6 @@ function LearnMoreBadgeCard({
 // Fetches the SSN stored in the backend.
 async function fetchSSNNumber(path, { uid, active_uid }) {
 	var SSNNumber;
-
-	// switch between
-	// const res = toggleSafeMode
-	// 	? await fetch("/api/auth/getSSN/" + uid)
-	// 	: await fetch("/api/auth/getSSNFromVault/" + uid);
 
 	const res = await fetch(path + uid);
 

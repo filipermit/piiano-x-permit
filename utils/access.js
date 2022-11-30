@@ -13,7 +13,7 @@ class Access {
 		// var permitted = false;
 		// if (
 		// 	uid == "filip@permit.io" &&
-		// 	("view-ssn-number" == action || "view-personal-info" == action)
+		// 	("view-public-ssn" == action || "view-personal-info" == action)
 		// )
 		// 	permitted = true;
 		const permitted = await this.permit.check(uid, action, resource);

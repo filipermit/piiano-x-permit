@@ -15,6 +15,7 @@
   flex-direction: column;
   height: 280px;
   border-radius: 10px;
+  margin: 0 16px;
 }
 
 .controls > * {
