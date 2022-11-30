@@ -13,7 +13,6 @@
         required_props = ["email"]
         content = '''
      function transform(context, object, value) {
-        console.log("******", context.param)
         if (context.param != undefined && (context.param == object.email)) return value;
         return "***-**-" + value.split("-")[2];
      }

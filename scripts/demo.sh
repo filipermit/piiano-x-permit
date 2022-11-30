@@ -3,7 +3,7 @@ full_path=$(realpath $0)
 dir_path=$(dirname $full_path)
 
 source $dir_path/../.env
-pvault="docker run --rm -i piiano/pvault-cli:0.9.8"
+pvault="docker run --rm -i piiano/pvault-cli:1.0.0"
 
 function debug()
 {
