@@ -20,14 +20,13 @@ PVAULT_BASE_PATH=http://localhost:8123
 DATABASE_URL=localhost
 ```
 
-
 <h3>2. Complete the onboarding with Permit.io</h3>
 
 Navigate to the [Permit App](https://app.permit.io/) and create an account. Run through the onboarding to learn how to work with Permit.
 
 Make sure you create a policy like shown in the example below. Your policy needs an `admin` role, with a `card` resource.
 <br /><br />
-The resource should have the actions: `view-personal-info` & `view-ssn-number`.
+The resource should have the actions: `view-personal-info` & `view-public-ssn`.
 
 <img width="1624" alt="Screenshot 2022-11-18 at 17 33 54" src="https://user-images.githubusercontent.com/109458126/202754960-45accfd1-3e9d-4c01-aa16-8e20f7d84af6.png">
 <img width="1624" alt="Screenshot 2022-11-18 at 17 34 07" src="https://user-images.githubusercontent.com/109458126/202754971-5f7bcebe-50d0-431b-903e-066a287200a1.png">
@@ -57,7 +56,6 @@ See the [getting started guide](https://piiano.com/docs/guides/get-started/).
 `npm install` followed by `npm run dev`
 <br /><br />
 Once the app starts, navigate to `localhost:3000`
-
 
 <h3>6. Enjoy the demo!</h3>
 

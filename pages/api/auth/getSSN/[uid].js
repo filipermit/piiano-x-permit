@@ -7,16 +7,22 @@ async function verifyAndFetchSSNNumber(req, res) {
 	var reqUid = req.query.uid;
 	const checkPublicSSN = await access.isUserAllowed(
 		reqUid,
-		"view-ssn-number",
+		"view-public-ssn",
+		"card"
+	);
+
+	const checkPrivateSSN = await access.isUserAllowed(
+		reqUid,
+		"view-private-ssn",
 		"card"
 	);
 
 	// If the uid of user card is the same as the current user that is logged in,
 	// and the permission check for viewing private SSN passes OR user has ability to view
 	// all SSN numbers - then fetch data from database.
-	if (checkPublicSSN || reqUid == uid) {
+	if ((checkPrivateSSN && reqUid == uid) || checkPublicSSN) {
 		var info = await db.query("SELECT ssn FROM users WHERE email=$1", [uid]);
-		res.status(200).send( info[0] );
+		res.status(200).send(info[0]);
 	} else {
 		res.status(403).send("Unauthorized");
 	}

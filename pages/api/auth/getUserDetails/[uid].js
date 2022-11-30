@@ -11,10 +11,17 @@ async function verifyAndFetchDetails(req, res) {
 		"card"
 	);
 
+	var checkPublicInfo = await access.isUserAllowed(
+		reqUid,
+		"view-public-info",
+		"card"
+	);
+
+	console.log("VIEW PERSONAL INFO: ", checkPersonalInfo, uid, reqUid);
+
 	// If the uid of user card is the same as the current user that is logged in,
 	// OR user has ability to view all info - then fetch data from database.
-    
-	if (checkPersonalInfo || reqUid == uid) {
+	if ((checkPersonalInfo && reqUid == uid) || checkPublicInfo) {
 		var info = await db.query(
 			"SELECT title,description,country,badges FROM users JOIN \
 		(SELECT user_email,json_agg(json_build_object('label', label, 'emoji', emoji)) as badges FROM badges GROUP BY user_email) as aa \
