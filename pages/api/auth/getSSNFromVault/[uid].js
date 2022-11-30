@@ -2,9 +2,9 @@ import { access } from "../../../../utils/access";
 import vault from "../../../../utils/Vault";
 
 async function verifyAndFetchSSNNumber(req, res) {
-	var uid = req.query.uid;
-
+	// rather than access.getUser(req);
 	var reqUid = req.query.uid;
+
 	const checkPublicSSN = await access.isUserAllowed(
 		reqUid,
 		"view-ssn-number",
@@ -16,6 +16,8 @@ async function verifyAndFetchSSNNumber(req, res) {
 		"view-private-ssn",
 		"card"
 	);
+
+	var uid = req.query.uid;
 
 	// If the uid of user card is the same as the current user that is logged in,
 	// and the permission check for viewing private SSN passes OR user has ability to view

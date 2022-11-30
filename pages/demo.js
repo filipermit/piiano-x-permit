@@ -49,7 +49,7 @@ export default function Demo(props) {
 		<div className={styles.demoContainer}>
 			<div className={styles.controls}>
 				<Switch
-					label="Toggle Safe Mode"
+					label="Protect Data with Vault"
 					onClick={() => context.setToggleSafeMode(!context.toggleSafeMode)}
 				/>
 				<NativeSelect

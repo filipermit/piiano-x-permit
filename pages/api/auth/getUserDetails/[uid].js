@@ -2,9 +2,8 @@ import { access } from "../../../../utils/access";
 import db from "../../../../utils/DB";
 
 async function verifyAndFetchDetails(req, res) {
-	var uid = req.query.uid;
-
 	var reqUid = access.getUser(req);
+
 	var checkPersonalInfo = await access.isUserAllowed(
 		reqUid,
 		"view-personal-info",
@@ -17,7 +16,7 @@ async function verifyAndFetchDetails(req, res) {
 		"card"
 	);
 
-	console.log("VIEW PERSONAL INFO: ", checkPersonalInfo, uid, reqUid);
+	var uid = req.query.uid;
 
 	// If the uid of user card is the same as the current user that is logged in,
 	// OR user has ability to view all info - then fetch data from database.
