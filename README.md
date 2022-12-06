@@ -7,15 +7,18 @@ Please follow the below steps to run this demo.
 ---
 
 <h3>1. Complete the onboarding with Permit.io</h3>
-Configure the envrionment varaibles
+Configure the envrionment varaibles:
+
 ```
 # PERMIT
 PERMIT_IO_KEY=KKKKKKKKK
 PERMIT_IO_URL=http://localhost:7766
+
 # PVAULT
 PVAULT_SERVICE_LICENSE=LLLLLLLLL
 PVAULT_API_KEY=pvaultauth
 PVAULT_BASE_PATH=http://localhost:8123
+
 # PSQL
 DATABASE_URL=localhost
 ```
@@ -24,12 +27,15 @@ DATABASE_URL=localhost
 
 Navigate to the [Permit App](https://app.permit.io/) and create an account. Run through the onboarding to learn how to work with Permit.
 
-Make sure you create a policy like shown in the example below. Your policy needs an `admin` role, with a `card` resource.
+Make sure you create a policy like shown in the example below. Your policy needs an `Admin`, a `Friend` and a `Stranger` role, with a `card` resource.
 <br /><br />
-The resource should have the actions: `view-personal-info` & `view-public-ssn`.
+The resource should have the actions: `view-personal-info`, `view-public-info`, `view-public-ssn` & `view-private-ssn`.
 
-<img width="1624" alt="Screenshot 2022-11-18 at 17 33 54" src="https://user-images.githubusercontent.com/109458126/202754960-45accfd1-3e9d-4c01-aa16-8e20f7d84af6.png">
-<img width="1624" alt="Screenshot 2022-11-18 at 17 34 07" src="https://user-images.githubusercontent.com/109458126/202754971-5f7bcebe-50d0-431b-903e-066a287200a1.png">
+<img width="1624" alt="Screenshot 2022-12-06 at 11 19 32" src="https://user-images.githubusercontent.com/109458126/205884826-ac4627ff-2ae4-4995-b99d-7069ffa2c6d3.png">
+
+<img width="1624" alt="Screenshot 2022-12-06 at 11 19 42" src="https://user-images.githubusercontent.com/109458126/205884839-eaed6f0d-d67a-4796-81b1-423b47693657.png">
+
+<img width="1624" alt="Screenshot 2022-12-06 at 11 19 50" src="https://user-images.githubusercontent.com/109458126/205884854-8bdf721d-2bdc-4ccb-a6eb-d95545432d02.png">
 
 If you are struggling with this step, follow the [Quickstart instructions](https://docs.permit.io/quickstart).
 
